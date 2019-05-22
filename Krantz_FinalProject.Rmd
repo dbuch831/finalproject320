@@ -16,7 +16,7 @@ output: html_document
 
 ##Introduction
 
-This project is a demonstration of the data science pipeline in R. To show this, I decided to use a topic that I personally love. This dataset comes from the game Football Manager 2017, a management simulator for soccer teams. I have a deep love for soccer, and Football Manager is one of my favorite games. I know a fair deal about players, but I was curious to see what the best possible team would be based off of certain stats. The following code/prose will describe the processes I used to gather and analyze this data, and will explain the various aspects of data science at each step.
+This project is a demonstration of the data science pipeline in R. To show this, I decided to use a topic that I personally love. This dataset comes from the game Football Manager 2017, a management simulator for soccer teams. I have a deep love for soccer, and Football Manager is one of my favorite games. I know a fair deal about players, but I was curious to see what the best possible team would be based off of certain stats. The following code/prose will describe the processes I used to gather and analyze this data, and will explain the various aspects of data science at each step. Each function I use also includes a link to extra documentation/tutorials to assist the reader if they get confused.
 
 ###Background Information
 
@@ -43,17 +43,17 @@ In Football Manager, each player is assigned a number of attributes. These attri
 
 Before we start coding, it is important to load in the proper libraries. Libraries contain functions that we can use to streamline our coding process. We will use four libraries in this project:
 
--tidyverse: helps facilitate certain processes
+-tidyverse (https://www.tidyverse.org/): helps facilitate certain processes
 
--ggplot2: allows for the creation of plots
+-ggplot2 (https://ggplot2.tidyverse.org/): allows for the creation of plots
 
--dplyr: allows for pipelines to be used, streamlining the coding process
+-dplyr (https://cran.r-project.org/web/packages/dplyr/dplyr.pdf): allows for pipelines to be used, streamlining the coding process
 
--broom: allows for statistical analysis and linear regression
+-broom (https://cran.r-project.org/web/packages/broom/vignettes/broom.html): allows for statistical analysis and linear regression
 
 Loading a library is simple: Just type library(libraryname) and run the line. This will load the library and you will be able to use it in your project.
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
@@ -68,7 +68,7 @@ https://www.kaggle.com/ajinkyablaze/football-manager-data
 
 The read_csv function allows us to read in the dataset from the csv and turn it into a data frame (rows and columns). colnames is a function that is used to show the column names in a data frame (this is important soon).
 
-```{r}
+```{r, message=FALSE}
 football_tab <- read_csv("D:/Dylan/UMD/CMSC320/dataset.csv")
 colnames(football_tab)
 ```
@@ -77,17 +77,17 @@ colnames(football_tab)
 
 This next step deals with the construction/use of a data pipeline. A pipeline in r allows for an easier and more streamlined way of using commands in R. The commands used in this pipeline are as follows:
 
--filter: allows for the pruning of entities (rows) in a data frame based on certain conditions.
+-filter (https://www.rdocumentation.org/packages/dplyr/versions/0.7.8/topics/filter): allows for the pruning of entities (rows) in a data frame based on certain conditions.
 
--mutate: allows for the changing/addition of a column based off of certain calculations.
+-mutate (https://www.rdocumentation.org/packages/dplyr/versions/0.5.0/topics/mutate): allows for the changing/addition of a column based off of certain calculations.
 
--select: selects certain rows in a data frame.
+-select (https://www.rdocumentation.org/packages/dplyr/versions/0.5.0/topics/select): selects certain rows in a data frame.
 
--arrange: orders data based off of whichever attribute is fed into this function.
+-arrange (https://www.rdocumentation.org/packages/dplyr/versions/0.7.8/topics/arrange): orders data based off of whichever attribute is fed into this function.
 
 The main data frame is being split into other frames based off of the positions of the players. Each of these new data frames are having two columns initially added: an adjusted age column (this data set is 3 years old), and a player score based off of an aggregate of attribute values. These values will vary for each position, and certain positions have more attributes than others (due to what is important for that position). As a result, there will be no cross-position comparison of values. This data will be used in further parts of our project. This is a great example of data collection and manipulation.
 
-```{r}
+```{r, warning=FALSE,message=FALSE}
 strikers <- football_tab%>%
   filter(Finishing >= 14, FirstTouch >= 14, Striker >= 16)%>%
   mutate(Score = Finishing + FirstTouch + Passing + Technique + Composure +
@@ -98,7 +98,7 @@ strikers <- football_tab%>%
 strikers
 ```
 
-```{r}
+```{r, message=FALSE}
 cm <- football_tab%>%
   filter(MidfielderCentral >= 17, FirstTouch >= 14, Passing >= 14)%>%
   mutate(Score = FirstTouch + Passing + Technique + Anticipation + Composure + 
@@ -109,7 +109,7 @@ cm <- football_tab%>%
 cm
 ```
 
-```{r}
+```{r, message=FALSE}
 lm <- football_tab%>%
   filter(MidfielderLeft >= 17, Crossing >= 13, FirstTouch >= 13)%>%
   mutate(Score = Crossing + Dribbling + FirstTouch + Passing + Technique +
@@ -120,7 +120,7 @@ lm <- football_tab%>%
 lm
 ```
 
-```{r}
+```{r, message=FALSE}
 rm <- football_tab%>%
   filter(MidfielderRight >= 17, Crossing >= 13, FirstTouch >= 13)%>%
   mutate(Score = Crossing + Dribbling + FirstTouch + Passing + Technique + 
@@ -131,7 +131,7 @@ rm <- football_tab%>%
 rm
 ```
 
-```{r}
+```{r, message=FALSE}
 lb <- football_tab%>%
   filter(DefenderLeft >= 17, Crossing >= 10, Marking >= 10)%>%
   mutate(Score = Crossing + Dribbling + Marking + Passing + Tackling + Technique + 
@@ -142,7 +142,7 @@ lb <- football_tab%>%
 lb
 ```
 
-```{r}
+```{r, message=FALSE}
 rb <- football_tab%>%
   filter(DefenderRight >= 17, Crossing >= 10, Marking >= 10)%>%
   mutate(Score = Crossing + Dribbling + Marking + Passing + Tackling + Technique + 
@@ -153,7 +153,7 @@ rb <- football_tab%>%
 rb
 ```
 
-```{r}
+```{r, message=FALSE}
 cb <- football_tab%>%
   filter(DefenderCentral >= 17, Marking >= 10, Tackling >= 14)%>%
   mutate(Score = FirstTouch + Heading + Marking + Passing + Tackling + Technique + 
@@ -165,7 +165,7 @@ cb <- football_tab%>%
 cb
 ```
 
-```{r}
+```{r, message=FALSE}
 gk <- football_tab%>%
   filter(Goalkeeper >= 17, Handling >= 10, Reflexes >= 10)%>%
   mutate(Score = AerialAbility + CommandOfArea + Communication + Handling + Kicking + 
@@ -180,11 +180,11 @@ gk
 
 I would like to see how age acts as a factor in player score. To observe this, it is best to use some graphs. ggplot2 provides functions that make graphing easy. The way this is accomplished in my project is within a pipeline (though this can be done outside one, given that the data frame is specified). There are three functions needed for this part: 
 
--ggplot: This constructs the mapping for the plot. The x value in these cases is the factored Age attribute. The y value is the player score for each position.
+-ggplot (https://www.statmethods.net/advgraphs/ggplot2.html): This constructs the mapping for the plot. The x value in these cases is the factored Age attribute. The y value is the player score for each position.
 
--geom_boxplot: This constructs a boxplot using the attributes described in ggplot. It is important to check that the x value is factored by age so that a boxplot appears for each age.
+-geom_boxplot (https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf): This constructs a boxplot using the attributes described in ggplot. It is important to check that the x value is factored by age so that a boxplot appears for each age.
 
-labs: These are the labels for the graphs. In this case we are labeling the title, x and y axes. 
+-labs: These are the labels for the graphs. In this case we are labeling the title, x and y axes. 
 
 Below this block of code I will explain the results of the graphs.
 
@@ -246,8 +246,8 @@ For the most part, once a player in a position hits a certain age, the average p
 
 This next step performs two duties: Get the per age change of player score, and conduct some hypothesis testing. 
 
--lm: This function conducts a linear regression function on whatever dataframe and variables used. Score~Age means that Score is conditioned on age. 
--tidy: tidy shows the values of the linear regression function, including the estimated deviance and p-value (necessary for hypothesis testing).
+-lm (https://www.rdocumentation.org/packages/stats/versions/3.6.0/topics/lm): This function conducts a linear regression function on whatever dataframe and variables used. Score~Age means that Score is conditioned on age. 
+-tidy (https://www.rdocumentation.org/packages/broom/versions/0.4.5/topics/tidy): tidy shows the values of the linear regression function, including the estimated deviance and p-value (necessary for hypothesis testing).
 
 Once we have the table for each position, we can start to perform hypothesis testing. A null hypothesis is rejected if a p-value >= 0.05 and accepted otherwise. The null hypothesis for this case is that there is no relationship between age and player score. The results can be seen below.
 
@@ -285,6 +285,8 @@ gk_val <- gk_lm%>%
   tidy()
 ```
 
+-Hypothesis Testing (http://www.hcbravo.org/IntroDataSci/bookdown-notes/experiment-design-and-hypothesis-testing.html)
+
 What each of these tables show is that the p-values are all below 0.05 so the null hypothesis is unilaterally rejected. Age does play some factor into player score. What we need now are the amounts that player score changes per year per position. This is a fairly simple process: using str_val$estimate[2] we are getting the values from the estimate column and selecting the 2nd row (which is the age estimate). We do this for each position.
 
 ```{r}
@@ -299,6 +301,8 @@ gk_ch <- gk_val$estimate[2]
 ```
 
 ##Adjusting Player Score
+
+-ifelse (https://www.rdocumentation.org/packages/base/versions/3.6.0/topics/ifelse)
 
 Now that we have the estimated change per year of age, we can alter our player score to fit our updated data. I used an ifelse() statement to positively alter the scores of players with ages below 35 (the perceived dropoff point for ability) and negatively alter the player scores of players over 35. The data frames were then rearranged based on this adjusted score.
 
@@ -348,7 +352,7 @@ If you compare these results with the original tables, you can see the change in
  
 ##Creating the Best Overall Team
 
-Now that we have all the data collected, we can construct our teams. The first team to create is the best overall team based on stats. This ignores age. we can use cm[x, c(y, z, w)] to pull the xth row and y, z, wth columns. We are pulling name, adjusted age, and adjusted score. We are also pulling the first row for each position (2 for the positions where we have 2 of the same).
+Now that we have all the data collected, we can construct our teams. The first team to create is the best overall team based on stats. This ignores age. we can use cm[x, c(y, z, w)] (https://dzone.com/articles/learn-r-how-extract-rows) to pull the xth row and y, z, wth columns. We are pulling name, adjusted age, and adjusted score. We are also pulling the first row for each position (2 for the positions where we have 2 of the same).
 
 ```{r}
 striker <- str_final[c(1,2), c(1, 5, 6)]

@@ -196,7 +196,7 @@ $(document).ready(function () {
 <h1>Final Project: Analysis and Creation of Optimal Football Teams using Football Manager 2017 Values</h1>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>This project is a demonstration of the data science pipeline in R. To show this, I decided to use a topic that I personally love. This dataset comes from the game Football Manager 2017, a management simulator for soccer teams. I have a deep love for soccer, and Football Manager is one of my favorite games. I know a fair deal about players, but I was curious to see what the best possible team would be based off of certain stats. The following code/prose will describe the processes I used to gather and analyze this data, and will explain the various aspects of data science at each step.</p>
+<p>This project is a demonstration of the data science pipeline in R. To show this, I decided to use a topic that I personally love. This dataset comes from the game Football Manager 2017, a management simulator for soccer teams. I have a deep love for soccer, and Football Manager is one of my favorite games. I know a fair deal about players, but I was curious to see what the best possible team would be based off of certain stats. The following code/prose will describe the processes I used to gather and analyze this data, and will explain the various aspects of data science at each step. Each function I use also includes a link to extra documentation/tutorials to assist the reader if they get confused.</p>
 <div id="background-information" class="section level3">
 <h3>Background Information</h3>
 <p>For those not familiar with soccer/football, the basic layout of a game is that 2 sides of 11 players each kick a ball around and try to score goals. Each team uses a formation, with each player performing a specific role within this formation. There are many formations to use and to do custom analysis on each formation/position would be cumbersome. This would defeat the purpose of this tutorial, so instead I am using a very basic formation: 4-4-2. This means that I have 4 defenders, 4 midfielders, and 2 forwards, as well as 1 goalkeeper. It is also important to define the roles/labels for each position:</p>
@@ -213,21 +213,13 @@ $(document).ready(function () {
 <div id="libraries" class="section level2">
 <h2>Libraries</h2>
 <p>Before we start coding, it is important to load in the proper libraries. Libraries contain functions that we can use to streamline our coding process. We will use four libraries in this project:</p>
-<p>-tidyverse: helps facilitate certain processes</p>
-<p>-ggplot2: allows for the creation of plots</p>
-<p>-dplyr: allows for pipelines to be used, streamlining the coding process</p>
-<p>-broom: allows for statistical analysis and linear regression</p>
+<p>-tidyverse (<a href="https://www.tidyverse.org/" class="uri">https://www.tidyverse.org/</a>): helps facilitate certain processes</p>
+<p>-ggplot2 (<a href="https://ggplot2.tidyverse.org/" class="uri">https://ggplot2.tidyverse.org/</a>): allows for the creation of plots</p>
+<p>-dplyr (<a href="https://cran.r-project.org/web/packages/dplyr/dplyr.pdf" class="uri">https://cran.r-project.org/web/packages/dplyr/dplyr.pdf</a>): allows for pipelines to be used, streamlining the coding process</p>
+<p>-broom (<a href="https://cran.r-project.org/web/packages/broom/vignettes/broom.html" class="uri">https://cran.r-project.org/web/packages/broom/vignettes/broom.html</a>): allows for statistical analysis and linear regression</p>
 <p>Loading a library is simple: Just type library(libraryname) and run the line. This will load the library and you will be able to use it in your project.</p>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## -- Attaching packages ------------------------------------------------------------------------------------------------------------------------------- tidyverse 1.2.1 --</code></pre>
-<pre><code>## √ ggplot2 3.1.0     √ purrr   0.3.0
-## √ tibble  2.0.1     √ dplyr   0.7.8
-## √ tidyr   0.8.2     √ stringr 1.3.1
-## √ readr   1.3.1     √ forcats 0.3.0</code></pre>
-<pre><code>## -- Conflicts ---------------------------------------------------------------------------------------------------------------------------------- tidyverse_conflicts() --
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(ggplot2)
+<pre class="r"><code>library(tidyverse)
+library(ggplot2)
 library(dplyr)
 library(broom)</code></pre>
 </div>
@@ -236,16 +228,8 @@ library(broom)</code></pre>
 <p>The next step is to load the dataset we will use for this project. This dataset is a csv (comma separated values). This dataset is available at</p>
 <p><a href="https://www.kaggle.com/ajinkyablaze/football-manager-data" class="uri">https://www.kaggle.com/ajinkyablaze/football-manager-data</a></p>
 <p>The read_csv function allows us to read in the dataset from the csv and turn it into a data frame (rows and columns). colnames is a function that is used to show the column names in a data frame (this is important soon).</p>
-<pre class="r"><code>football_tab &lt;- read_csv(&quot;D:/Dylan/UMD/CMSC320/dataset.csv&quot;)</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_double(),
-##   Name = col_character(),
-##   Born = col_character(),
-##   PositionsDesc = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre class="r"><code>colnames(football_tab)</code></pre>
+<pre class="r"><code>football_tab &lt;- read_csv(&quot;D:/Dylan/UMD/CMSC320/dataset.csv&quot;)
+colnames(football_tab)</code></pre>
 <pre><code>##  [1] &quot;UID&quot;                 &quot;Name&quot;                &quot;NationID&quot;           
 ##  [4] &quot;Born&quot;                &quot;Age&quot;                 &quot;IntCaps&quot;            
 ##  [7] &quot;IntGoals&quot;            &quot;U21Caps&quot;             &quot;U21Goals&quot;           
@@ -280,10 +264,10 @@ library(broom)</code></pre>
 <div id="separating-by-position" class="section level2">
 <h2>Separating by Position</h2>
 <p>This next step deals with the construction/use of a data pipeline. A pipeline in r allows for an easier and more streamlined way of using commands in R. The commands used in this pipeline are as follows:</p>
-<p>-filter: allows for the pruning of entities (rows) in a data frame based on certain conditions.</p>
-<p>-mutate: allows for the changing/addition of a column based off of certain calculations.</p>
-<p>-select: selects certain rows in a data frame.</p>
-<p>-arrange: orders data based off of whichever attribute is fed into this function.</p>
+<p>-filter (<a href="https://www.rdocumentation.org/packages/dplyr/versions/0.7.8/topics/filter" class="uri">https://www.rdocumentation.org/packages/dplyr/versions/0.7.8/topics/filter</a>): allows for the pruning of entities (rows) in a data frame based on certain conditions.</p>
+<p>-mutate (<a href="https://www.rdocumentation.org/packages/dplyr/versions/0.5.0/topics/mutate" class="uri">https://www.rdocumentation.org/packages/dplyr/versions/0.5.0/topics/mutate</a>): allows for the changing/addition of a column based off of certain calculations.</p>
+<p>-select (<a href="https://www.rdocumentation.org/packages/dplyr/versions/0.5.0/topics/select" class="uri">https://www.rdocumentation.org/packages/dplyr/versions/0.5.0/topics/select</a>): selects certain rows in a data frame.</p>
+<p>-arrange (<a href="https://www.rdocumentation.org/packages/dplyr/versions/0.7.8/topics/arrange" class="uri">https://www.rdocumentation.org/packages/dplyr/versions/0.7.8/topics/arrange</a>): orders data based off of whichever attribute is fed into this function.</p>
 <p>The main data frame is being split into other frames based off of the positions of the players. Each of these new data frames are having two columns initially added: an adjusted age column (this data set is 3 years old), and a player score based off of an aggregate of attribute values. These values will vary for each position, and certain positions have more attributes than others (due to what is important for that position). As a result, there will be no cross-position comparison of values. This data will be used in further parts of our project. This is a great example of data collection and manipulation.</p>
 <pre class="r"><code>strikers &lt;- football_tab%&gt;%
   filter(Finishing &gt;= 14, FirstTouch &gt;= 14, Striker &gt;= 16)%&gt;%
@@ -291,9 +275,8 @@ library(broom)</code></pre>
          Decisions + OffTheBall + Teamwork + Vision + Balance + Strength)%&gt;%
   mutate(Adj_Age = Age + 3)%&gt;%
   select(Name, Age, Score, Workrate, Adj_Age)%&gt;%
-  arrange(desc(Score))</code></pre>
-<pre><code>## Warning: package 'bindrcpp' was built under R version 3.5.2</code></pre>
-<pre class="r"><code>strikers</code></pre>
+  arrange(desc(Score))
+strikers</code></pre>
 <pre><code>## # A tibble: 1,113 x 5
 ##    Name                 Age Score Workrate Adj_Age
 ##    &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
@@ -467,9 +450,9 @@ gk</code></pre>
 <div id="plotting-the-distribution-of-the-data" class="section level2">
 <h2>Plotting the Distribution of the Data</h2>
 <p>I would like to see how age acts as a factor in player score. To observe this, it is best to use some graphs. ggplot2 provides functions that make graphing easy. The way this is accomplished in my project is within a pipeline (though this can be done outside one, given that the data frame is specified). There are three functions needed for this part:</p>
-<p>-ggplot: This constructs the mapping for the plot. The x value in these cases is the factored Age attribute. The y value is the player score for each position.</p>
-<p>-geom_boxplot: This constructs a boxplot using the attributes described in ggplot. It is important to check that the x value is factored by age so that a boxplot appears for each age.</p>
-<p>labs: These are the labels for the graphs. In this case we are labeling the title, x and y axes.</p>
+<p>-ggplot (<a href="https://www.statmethods.net/advgraphs/ggplot2.html" class="uri">https://www.statmethods.net/advgraphs/ggplot2.html</a>): This constructs the mapping for the plot. The x value in these cases is the factored Age attribute. The y value is the player score for each position.</p>
+<p>-geom_boxplot (<a href="https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf" class="uri">https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf</a>): This constructs a boxplot using the attributes described in ggplot. It is important to check that the x value is factored by age so that a boxplot appears for each age.</p>
+<p>-labs: These are the labels for the graphs. In this case we are labeling the title, x and y axes.</p>
 <p>Below this block of code I will explain the results of the graphs.</p>
 <pre class="r"><code>s_plot &lt;- strikers%&gt;%
   ggplot(mapping = aes(x=factor(Age), y= Score)) + 
@@ -527,7 +510,7 @@ gk_plot</code></pre>
 <div id="performing-regression" class="section level2">
 <h2>Performing Regression</h2>
 <p>This next step performs two duties: Get the per age change of player score, and conduct some hypothesis testing.</p>
-<p>-lm: This function conducts a linear regression function on whatever dataframe and variables used. Score~Age means that Score is conditioned on age. -tidy: tidy shows the values of the linear regression function, including the estimated deviance and p-value (necessary for hypothesis testing).</p>
+<p>-lm (<a href="https://www.rdocumentation.org/packages/stats/versions/3.6.0/topics/lm" class="uri">https://www.rdocumentation.org/packages/stats/versions/3.6.0/topics/lm</a>): This function conducts a linear regression function on whatever dataframe and variables used. Score~Age means that Score is conditioned on age. -tidy (<a href="https://www.rdocumentation.org/packages/broom/versions/0.4.5/topics/tidy" class="uri">https://www.rdocumentation.org/packages/broom/versions/0.4.5/topics/tidy</a>): tidy shows the values of the linear regression function, including the estimated deviance and p-value (necessary for hypothesis testing).</p>
 <p>Once we have the table for each position, we can start to perform hypothesis testing. A null hypothesis is rejected if a p-value &gt;= 0.05 and accepted otherwise. The null hypothesis for this case is that there is no relationship between age and player score. The results can be seen below.</p>
 <pre class="r"><code>str_lm &lt;- lm(Score~Age, data=strikers)
 str_val &lt;- str_lm%&gt;%
@@ -560,6 +543,7 @@ cb_val &lt;- cb_lm%&gt;%
 gk_lm &lt;- lm(Score~Age, data=gk)
 gk_val &lt;- gk_lm%&gt;%
   tidy()</code></pre>
+<p>-Hypothesis Testing (<a href="http://www.hcbravo.org/IntroDataSci/bookdown-notes/experiment-design-and-hypothesis-testing.html" class="uri">http://www.hcbravo.org/IntroDataSci/bookdown-notes/experiment-design-and-hypothesis-testing.html</a>)</p>
 <p>What each of these tables show is that the p-values are all below 0.05 so the null hypothesis is unilaterally rejected. Age does play some factor into player score. What we need now are the amounts that player score changes per year per position. This is a fairly simple process: using str_val$estimate[2] we are getting the values from the estimate column and selecting the 2nd row (which is the age estimate). We do this for each position.</p>
 <pre class="r"><code>str_ch &lt;- str_val$estimate[2]
 cm_ch &lt;- cm_val$estimate[2]
@@ -572,6 +556,7 @@ gk_ch &lt;- gk_val$estimate[2]</code></pre>
 </div>
 <div id="adjusting-player-score" class="section level2">
 <h2>Adjusting Player Score</h2>
+<p>-ifelse (<a href="https://www.rdocumentation.org/packages/base/versions/3.6.0/topics/ifelse" class="uri">https://www.rdocumentation.org/packages/base/versions/3.6.0/topics/ifelse</a>)</p>
 <p>Now that we have the estimated change per year of age, we can alter our player score to fit our updated data. I used an ifelse() statement to positively alter the scores of players with ages below 35 (the perceived dropoff point for ability) and negatively alter the player scores of players over 35. The data frames were then rearranged based on this adjusted score.</p>
 <pre class="r"><code>str_final &lt;- strikers%&gt;%
   mutate(Adj_Score = ifelse(Adj_Age &lt;= 35, Score + str_ch*3, Score - str_ch*(2 * Adj_Age-34)))%&gt;%
@@ -721,7 +706,7 @@ gk_final</code></pre>
 </div>
 <div id="creating-the-best-overall-team" class="section level2">
 <h2>Creating the Best Overall Team</h2>
-<p>Now that we have all the data collected, we can construct our teams. The first team to create is the best overall team based on stats. This ignores age. we can use cm[x, c(y, z, w)] to pull the xth row and y, z, wth columns. We are pulling name, adjusted age, and adjusted score. We are also pulling the first row for each position (2 for the positions where we have 2 of the same).</p>
+<p>Now that we have all the data collected, we can construct our teams. The first team to create is the best overall team based on stats. This ignores age. we can use cm[x, c(y, z, w)] (<a href="https://dzone.com/articles/learn-r-how-extract-rows" class="uri">https://dzone.com/articles/learn-r-how-extract-rows</a>) to pull the xth row and y, z, wth columns. We are pulling name, adjusted age, and adjusted score. We are also pulling the first row for each position (2 for the positions where we have 2 of the same).</p>
 <pre class="r"><code>striker &lt;- str_final[c(1,2), c(1, 5, 6)]
 cm &lt;- cm_final[c(1,2), c(1, 5, 6)]
 lm &lt;- lm_final[1, c(1, 5, 6)]

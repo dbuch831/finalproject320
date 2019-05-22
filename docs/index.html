@@ -516,6 +516,7 @@ gk_plot</code></pre>
 <pre class="r"><code>str_lm &lt;- lm(Score~Age, data=strikers)
 str_val &lt;- str_lm%&gt;%
   tidy()
+
 str_val</code></pre>
 <pre><code>## # A tibble: 2 x 5
 ##   term        estimate std.error statistic   p.value
@@ -525,6 +526,7 @@ str_val</code></pre>
 <pre class="r"><code>cm_lm &lt;- lm(Score~Age, data=cm)
 cm_val &lt;- cm_lm%&gt;%
   tidy()
+
 cm_val</code></pre>
 <pre><code>## # A tibble: 2 x 5
 ##   term        estimate std.error statistic   p.value
@@ -534,6 +536,7 @@ cm_val</code></pre>
 <pre class="r"><code>lm_lm &lt;- lm(Score~Age, data=lm)
 lm_val &lt;- lm_lm%&gt;%
   tidy()
+
 lm_val</code></pre>
 <pre><code>## # A tibble: 2 x 5
 ##   term        estimate std.error statistic   p.value
@@ -543,6 +546,7 @@ lm_val</code></pre>
 <pre class="r"><code>rm_lm &lt;- lm(Score~Age, data=rm)
 rm_val &lt;- rm_lm%&gt;%
   tidy()
+
 rm_val</code></pre>
 <pre><code>## # A tibble: 2 x 5
 ##   term        estimate std.error statistic   p.value
@@ -552,6 +556,7 @@ rm_val</code></pre>
 <pre class="r"><code>lb_lm &lt;- lm(Score~Age, data=lb)
 lb_val &lt;- lb_lm%&gt;%
   tidy()
+
 lb_val</code></pre>
 <pre><code>## # A tibble: 2 x 5
 ##   term        estimate std.error statistic       p.value
@@ -561,6 +566,7 @@ lb_val</code></pre>
 <pre class="r"><code>rb_lm &lt;- lm(Score~Age, data=rb)
 rb_val &lt;- rb_lm%&gt;%
   tidy()
+
 rb_val</code></pre>
 <pre><code>## # A tibble: 2 x 5
 ##   term        estimate std.error statistic  p.value
@@ -570,6 +576,7 @@ rb_val</code></pre>
 <pre class="r"><code>cb_lm &lt;- lm(Score~Age, data=cb)
 cb_val &lt;- cb_lm%&gt;%
   tidy()
+
 cb_val</code></pre>
 <pre><code>## # A tibble: 2 x 5
 ##   term        estimate std.error statistic  p.value
@@ -579,6 +586,7 @@ cb_val</code></pre>
 <pre class="r"><code>gk_lm &lt;- lm(Score~Age, data=gk)
 gk_val &lt;- gk_lm%&gt;%
   tidy()
+
 gk_val</code></pre>
 <pre><code>## # A tibble: 2 x 5
 ##   term        estimate std.error statistic p.value

@@ -256,41 +256,49 @@ Once we have the table for each position, we can start to perform hypothesis tes
 str_lm <- lm(Score~Age, data=strikers)
 str_val <- str_lm%>%
   tidy()
+
 str_val
 
 cm_lm <- lm(Score~Age, data=cm)
 cm_val <- cm_lm%>%
   tidy()
+
 cm_val
 
 lm_lm <- lm(Score~Age, data=lm)
 lm_val <- lm_lm%>%
   tidy()
+
 lm_val
 
 rm_lm <- lm(Score~Age, data=rm)
 rm_val <- rm_lm%>%
   tidy()
+
 rm_val
 
 lb_lm <- lm(Score~Age, data=lb)
 lb_val <- lb_lm%>%
   tidy()
+
 lb_val
 
 rb_lm <- lm(Score~Age, data=rb)
 rb_val <- rb_lm%>%
   tidy()
+
 rb_val
 
 cb_lm <- lm(Score~Age, data=cb)
 cb_val <- cb_lm%>%
   tidy()
+
 cb_val
 
 gk_lm <- lm(Score~Age, data=gk)
 gk_val <- gk_lm%>%
   tidy()
+
 gk_val
 ```
 

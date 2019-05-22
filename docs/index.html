@@ -510,7 +510,8 @@ gk_plot</code></pre>
 <div id="performing-regression" class="section level2">
 <h2>Performing Regression</h2>
 <p>This next step performs two duties: Get the per age change of player score, and conduct some hypothesis testing.</p>
-<p>-lm (<a href="https://www.rdocumentation.org/packages/stats/versions/3.6.0/topics/lm" class="uri">https://www.rdocumentation.org/packages/stats/versions/3.6.0/topics/lm</a>): This function conducts a linear regression function on whatever dataframe and variables used. Score~Age means that Score is conditioned on age. -tidy (<a href="https://www.rdocumentation.org/packages/broom/versions/0.4.5/topics/tidy" class="uri">https://www.rdocumentation.org/packages/broom/versions/0.4.5/topics/tidy</a>): tidy shows the values of the linear regression function, including the estimated deviance and p-value (necessary for hypothesis testing).</p>
+<p>-lm (<a href="https://www.rdocumentation.org/packages/stats/versions/3.6.0/topics/lm" class="uri">https://www.rdocumentation.org/packages/stats/versions/3.6.0/topics/lm</a>): This function conducts a linear regression function on whatever dataframe and variables used. Score~Age means that Score is conditioned on age.</p>
+<p>-tidy (<a href="https://www.rdocumentation.org/packages/broom/versions/0.4.5/topics/tidy" class="uri">https://www.rdocumentation.org/packages/broom/versions/0.4.5/topics/tidy</a>): tidy shows the values of the linear regression function, including the estimated deviance and p-value (necessary for hypothesis testing).</p>
 <p>Once we have the table for each position, we can start to perform hypothesis testing. A null hypothesis is rejected if a p-value &gt;= 0.05 and accepted otherwise. The null hypothesis for this case is that there is no relationship between age and player score. The results can be seen below.</p>
 <pre class="r"><code>str_lm &lt;- lm(Score~Age, data=strikers)
 str_val &lt;- str_lm%&gt;%

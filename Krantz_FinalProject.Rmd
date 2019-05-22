@@ -247,6 +247,7 @@ For the most part, once a player in a position hits a certain age, the average p
 This next step performs two duties: Get the per age change of player score, and conduct some hypothesis testing. 
 
 -lm (https://www.rdocumentation.org/packages/stats/versions/3.6.0/topics/lm): This function conducts a linear regression function on whatever dataframe and variables used. Score~Age means that Score is conditioned on age. 
+
 -tidy (https://www.rdocumentation.org/packages/broom/versions/0.4.5/topics/tidy): tidy shows the values of the linear regression function, including the estimated deviance and p-value (necessary for hypothesis testing).
 
 Once we have the table for each position, we can start to perform hypothesis testing. A null hypothesis is rejected if a p-value >= 0.05 and accepted otherwise. The null hypothesis for this case is that there is no relationship between age and player score. The results can be seen below.

@@ -12,13 +12,46 @@ output: html_document
 ---
 
 
-#Final Project: Analysis and Creation of Optimal Football Teams using Football Manager 2017 Statistics
+#Final Project: Analysis and Creation of Optimal Football Teams using Football Manager 2017 Values
 
 ##Introduction
 
-Thi
+This project is a demonstration of the data science pipeline in R. To show this, I decided to use a topic that I personally love. This dataset comes from the game Football Manager 2017, a management simulator for soccer teams. I have a deep love for soccer, and Football Manager is one of my favorite games. I know a fair deal about players, but I was curious to see what the best possible team would be based off of certain stats. The following code/prose will describe the processes I used to gather and analyze this data, and will explain the various aspects of data science at each step.
 
-##Purpose
+###Background Information
+
+For those not familiar with soccer/football, the basic layout of a game is that 2 sides of 11 players each kick a ball around and try to score goals. Each team uses a formation, with each player performing a specific role within this formation. There are many formations to use and to do custom analysis on each formation/position would be cumbersome. This would defeat the purpose of this tutorial, so instead I am using a very basic formation: 4-4-2. This means that I have 4 defenders, 4 midfielders, and 2 forwards, as well as 1 goalkeeper. 
+It is also important to define the roles/labels for each position:
+
+-Striker(Str): This is the front man for a team. Their primary objective is to get into the opponent's final third and score.
+
+-Center Midfielder(CM): This player facilitates transition from defending to attacking. They are also responsible for advancing play and making defensive moves.
+
+-Left/Right Midfielder(LM/RM): These players play out wide and facilitate attacking movements along with acting as a first defense for the wide parts of the field.
+
+-Left/Right Back(LB/RB): Like the LM/RM, these players play out wide. However, in this formation their role is almost purely defensive. 
+
+-Center Back(CB): These are the primary interior defenders for a team. They are aggressive and must be able to properly mark and tackle their opponents.
+
+-Goalkeeper(GK): This player is responsible for guarding their team's goal. They are the only players that can use their hands to touch the ball.
+
+From now on the abbreviations will mostly be used.
+
+In Football Manager, each player is assigned a number of attributes. These attributes represent certain skills or physical/mental traits associated with soccer. The values of these attributes range from 1 to 20, with 20 being the best.
+
+##Libraries
+
+Before we start coding, it is important to load in the proper libraries. Libraries contain functions that we can use to streamline our coding process. We will use four libraries in this project:
+
+-tidyverse: helps facilitate certain processes
+
+-ggplot2: allows for the creation of plots
+
+-dplyr: allows for pipelines to be used, streamlining the coding process
+
+-broom: allows for statistical analysis and linear regression
+
+Loading a library is simple: Just type library(libraryname) and run the line. This will load the library and you will be able to use it in your project.
 
 ```{r, warning=FALSE}
 library(tidyverse)
@@ -29,12 +62,30 @@ library(broom)
 
 ##Loading the Data
 
+The next step is to load the dataset we will use for this project. This dataset is a csv (comma separated values). This dataset is available at
+
+https://www.kaggle.com/ajinkyablaze/football-manager-data
+
+The read_csv function allows us to read in the dataset from the csv and turn it into a data frame (rows and columns). colnames is a function that is used to show the column names in a data frame (this is important soon).
+
 ```{r}
 football_tab <- read_csv("D:/Dylan/UMD/CMSC320/dataset.csv")
 colnames(football_tab)
 ```
 
 ##Separating by Position
+
+This next step deals with the construction/use of a data pipeline. A pipeline in r allows for an easier and more streamlined way of using commands in R. The commands used in this pipeline are as follows:
+
+-filter: allows for the pruning of entities (rows) in a data frame based on certain conditions.
+
+-mutate: allows for the changing/addition of a column based off of certain calculations.
+
+-select: selects certain rows in a data frame.
+
+-arrange: orders data based off of whichever attribute is fed into this function.
+
+The main data frame is being split into other frames based off of the positions of the players. Each of these new data frames are having two columns initially added: an adjusted age column (this data set is 3 years old), and a player score based off of an aggregate of attribute values. These values will vary for each position, and certain positions have more attributes than others (due to what is important for that position). As a result, there will be no cross-position comparison of values. This data will be used in further parts of our project. This is a great example of data collection and manipulation.
 
 ```{r}
 strikers <- football_tab%>%
@@ -127,6 +178,16 @@ gk
 
 ##Plotting the Distribution of the Data
 
+I would like to see how age acts as a factor in player score. To observe this, it is best to use some graphs. ggplot2 provides functions that make graphing easy. The way this is accomplished in my project is within a pipeline (though this can be done outside one, given that the data frame is specified). There are three functions needed for this part: 
+
+-ggplot: This constructs the mapping for the plot. The x value in these cases is the factored Age attribute. The y value is the player score for each position.
+
+-geom_boxplot: This constructs a boxplot using the attributes described in ggplot. It is important to check that the x value is factored by age so that a boxplot appears for each age.
+
+labs: These are the labels for the graphs. In this case we are labeling the title, x and y axes. 
+
+Below this block of code I will explain the results of the graphs.
+
 ```{r}
 s_plot <- strikers%>%
   ggplot(mapping = aes(x=factor(Age), y= Score)) + 
@@ -177,7 +238,18 @@ gk_plot <- gk%>%
 gk_plot
 ```
 
+###What the graphs tell us
+
+For the most part, once a player in a position hits a certain age, the average player score remains fairly constant until an older age bracket (>40). The exception to this is the strikers graph, where there is a relatively defined peak with a significant dropoff afterwards. I used box plots for this application as they are excellent at showing the distribution of a large set of data points. Along with violin plots, they make visualization easier.
+
 ##Performing Regression
+
+This next step performs two duties: Get the per age change of player score, and conduct some hypothesis testing. 
+
+-lm: This function conducts a linear regression function on whatever dataframe and variables used. Score~Age means that Score is conditioned on age. 
+-tidy: tidy shows the values of the linear regression function, including the estimated deviance and p-value (necessary for hypothesis testing).
+
+Once we have the table for each position, we can start to perform hypothesis testing. A null hypothesis is rejected if a p-value >= 0.05 and accepted otherwise. The null hypothesis for this case is that there is no relationship between age and player score. The results can be seen below.
 
 ```{r}
 str_lm <- lm(Score~Age, data=strikers)
@@ -213,6 +285,8 @@ gk_val <- gk_lm%>%
   tidy()
 ```
 
+What each of these tables show is that the p-values are all below 0.05 so the null hypothesis is unilaterally rejected. Age does play some factor into player score. What we need now are the amounts that player score changes per year per position. This is a fairly simple process: using str_val$estimate[2] we are getting the values from the estimate column and selecting the 2nd row (which is the age estimate). We do this for each position.
+
 ```{r}
 str_ch <- str_val$estimate[2]
 cm_ch <- cm_val$estimate[2]
@@ -225,6 +299,8 @@ gk_ch <- gk_val$estimate[2]
 ```
 
 ##Adjusting Player Score
+
+Now that we have the estimated change per year of age, we can alter our player score to fit our updated data. I used an ifelse() statement to positively alter the scores of players with ages below 35 (the perceived dropoff point for ability) and negatively alter the player scores of players over 35. The data frames were then rearranged based on this adjusted score.
 
 ```{r}
 str_final <- strikers%>%
@@ -268,7 +344,11 @@ gk_final <- gk%>%
 gk_final
 ```
 
+If you compare these results with the original tables, you can see the change in top player order.
+ 
 ##Creating the Best Overall Team
+
+Now that we have all the data collected, we can construct our teams. The first team to create is the best overall team based on stats. This ignores age. we can use cm[x, c(y, z, w)] to pull the xth row and y, z, wth columns. We are pulling name, adjusted age, and adjusted score. We are also pulling the first row for each position (2 for the positions where we have 2 of the same).
 
 ```{r}
 striker <- str_final[c(1,2), c(1, 5, 6)]
@@ -292,7 +372,11 @@ cb
 gk
 ```
 
+Thus the best overall team is Leo Messi, Karim Benzema, Andres Iniesta, Toni Kroos, Neymar, Arjen Robben, Nacho Monreal, Philipp Lahm, Gerard Pique, Mats Hummels, and Manuel Neuer.  
+
 ##Creating the Best Long-Term Team
+
+The same process is repeated for the best long term team, except the best players are under 30. We want longevity.
 
 ```{r}
 striker <- str_final%>%
@@ -339,7 +423,11 @@ cb[c(1,2),]
 gk[1,]
 ```
 
+Thus the best long term team is Lewandowski, Dybala, Kroos, Busquets, Neymar, Costa, Alaba, Azpilicueta, Hummels, Boateng, and Oblak.
+
 ##Creating the Best Youth Team
+
+Now we exclude all players over 22. This is the best youth team.
 
 ```{r}
 striker <- str_final%>%
@@ -386,9 +474,11 @@ cb[c(1,2),]
 gk[1,]
 ```
 
+Thus the best youth team is Barbosa, Jesus, Neves, Horta, Dembele, Bailey, Martin, Henrichs, Vallejo, Elvedi, Rico.
+
 ##Conclusions
 
-
+While this dataset was initially outdated, we were able to go through and update it to be more accurate. There are some cases where players retired (Totti, Xavi, Pirlo) so the stats are somewhat skewed for them. Overall the analysis picked fairly good teams for the 2016/2017 season, but was somewhat inaccurate given that players got injured, sold, or regressed. Overall player score is a good metric for analyzing the best players, but there are many more factors to consider outside of skill. This project served as a walkthrough for the data science pipeline. I hope you enjoyed.
 
 
 

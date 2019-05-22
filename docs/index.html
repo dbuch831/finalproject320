@@ -512,7 +512,7 @@ gk_plot</code></pre>
 <p>This next step performs two duties: Get the per age change of player score, and conduct some hypothesis testing.</p>
 <p>-lm (<a href="https://www.rdocumentation.org/packages/stats/versions/3.6.0/topics/lm" class="uri">https://www.rdocumentation.org/packages/stats/versions/3.6.0/topics/lm</a>): This function conducts a linear regression function on whatever dataframe and variables used. Score~Age means that Score is conditioned on age.</p>
 <p>-tidy (<a href="https://www.rdocumentation.org/packages/broom/versions/0.4.5/topics/tidy" class="uri">https://www.rdocumentation.org/packages/broom/versions/0.4.5/topics/tidy</a>): tidy shows the values of the linear regression function, including the estimated deviance and p-value (necessary for hypothesis testing).</p>
-<p>Once we have the table for each position, we can start to perform hypothesis testing. A null hypothesis is rejected if a p-value &gt;= 0.05 and accepted otherwise. The null hypothesis for this case is that there is no relationship between age and player score. The results can be seen below.</p>
+<p>Once we have the table for each position, we can start to perform hypothesis testing. A null hypothesis is rejected if a p-value &gt;= 0.05 and accepted otherwise. The null hypothesis for this case is that there is a relationship between age and player score. The results can be seen below.</p>
 <pre class="r"><code>str_lm &lt;- lm(Score~Age, data=strikers)
 str_val &lt;- str_lm%&gt;%
   tidy()
@@ -545,7 +545,7 @@ gk_lm &lt;- lm(Score~Age, data=gk)
 gk_val &lt;- gk_lm%&gt;%
   tidy()</code></pre>
 <p>-Hypothesis Testing (<a href="http://www.hcbravo.org/IntroDataSci/bookdown-notes/experiment-design-and-hypothesis-testing.html" class="uri">http://www.hcbravo.org/IntroDataSci/bookdown-notes/experiment-design-and-hypothesis-testing.html</a>)</p>
-<p>What each of these tables show is that the p-values are all below 0.05 so the null hypothesis is unilaterally rejected. Age does play some factor into player score. What we need now are the amounts that player score changes per year per position. This is a fairly simple process: using str_val$estimate[2] we are getting the values from the estimate column and selecting the 2nd row (which is the age estimate). We do this for each position and will apply these values soon.</p>
+<p>What each of these tables show is that the p-values are all below 0.05 so the null hypothesis is unilaterally accepted. Age does play some factor into player score. What we need now are the amounts that player score changes per year per position. This is a fairly simple process: using str_val$estimate[2] we are getting the values from the estimate column and selecting the 2nd row (which is the age estimate). We do this for each position and will apply these values soon.</p>
 <pre class="r"><code>str_ch &lt;- str_val$estimate[2]
 cm_ch &lt;- cm_val$estimate[2]
 lm_ch &lt;- lm_val$estimate[2]

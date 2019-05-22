@@ -515,34 +515,75 @@ gk_plot</code></pre>
 <pre class="r"><code>str_lm &lt;- lm(Score~Age, data=strikers)
 str_val &lt;- str_lm%&gt;%
   tidy()
-
-cm_lm &lt;- lm(Score~Age, data=cm)
+str_val</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)    81.2     2.25        36.1 9.97e-190
+## 2 Age             1.65    0.0912      18.1 1.62e- 64</code></pre>
+<pre class="r"><code>cm_lm &lt;- lm(Score~Age, data=cm)
 cm_val &lt;- cm_lm%&gt;%
   tidy()
-
-lm_lm &lt;- lm(Score~Age, data=lm)
+cm_val</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)    87.0     2.28        38.1 2.10e-221
+## 2 Age             2.11    0.0911      23.2 1.81e-101</code></pre>
+<pre class="r"><code>lm_lm &lt;- lm(Score~Age, data=lm)
 lm_val &lt;- lm_lm%&gt;%
   tidy()
-
-rm_lm &lt;- lm(Score~Age, data=rm)
+lm_val</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)  108.       2.56       42.1  2.99e-187
+## 2 Age            0.580    0.0991      5.85 7.75e-  9</code></pre>
+<pre class="r"><code>rm_lm &lt;- lm(Score~Age, data=rm)
 rm_val &lt;- rm_lm%&gt;%
   tidy()
-
-lb_lm &lt;- lm(Score~Age, data=lb)
+rm_val</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)   98.2      2.41       40.7  1.24e-179
+## 2 Age            0.925    0.0961      9.63 1.35e- 20</code></pre>
+<pre class="r"><code>lb_lm &lt;- lm(Score~Age, data=lb)
 lb_val &lt;- lb_lm%&gt;%
   tidy()
-
-rb_lm &lt;- lm(Score~Age, data=rb)
+lb_val</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term        estimate std.error statistic       p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;
+## 1 (Intercept)  148.       1.52       97.3  0            
+## 2 Age            0.338    0.0568      5.96 0.00000000290</code></pre>
+<pre class="r"><code>rb_lm &lt;- lm(Score~Age, data=rb)
 rb_val &lt;- rb_lm%&gt;%
   tidy()
-
-cb_lm &lt;- lm(Score~Age, data=cb)
+rb_val</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)  144.       1.50       95.9  0.      
+## 2 Age            0.462    0.0563      8.21 3.44e-16</code></pre>
+<pre class="r"><code>cb_lm &lt;- lm(Score~Age, data=cb)
 cb_val &lt;- cb_lm%&gt;%
   tidy()
-
-gk_lm &lt;- lm(Score~Age, data=gk)
+cb_val</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)   144.      2.07        69.4 0.      
+## 2 Age             1.66    0.0779      21.3 8.68e-95</code></pre>
+<pre class="r"><code>gk_lm &lt;- lm(Score~Age, data=gk)
 gk_val &lt;- gk_lm%&gt;%
-  tidy()</code></pre>
+  tidy()
+gk_val</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term        estimate std.error statistic p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 (Intercept)    83.5     0.753      111.        0
+## 2 Age             1.95    0.0305      63.9       0</code></pre>
 <p>-Hypothesis Testing (<a href="http://www.hcbravo.org/IntroDataSci/bookdown-notes/experiment-design-and-hypothesis-testing.html" class="uri">http://www.hcbravo.org/IntroDataSci/bookdown-notes/experiment-design-and-hypothesis-testing.html</a>)</p>
 <p>What each of these tables show is that the p-values are all below 0.05 so the null hypothesis is unilaterally rejected. Age does play some factor into player score. What we need now are the amounts that player score changes per year per position. This is a fairly simple process: using str_val$estimate[2] we are getting the values from the estimate column and selecting the 2nd row (which is the age estimate). We do this for each position.</p>
 <pre class="r"><code>str_ch &lt;- str_val$estimate[2]

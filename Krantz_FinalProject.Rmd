@@ -295,7 +295,7 @@ gk_val
 
 -Hypothesis Testing (http://www.hcbravo.org/IntroDataSci/bookdown-notes/experiment-design-and-hypothesis-testing.html)
 
-What each of these tables show is that the p-values are all below 0.05 so the null hypothesis is unilaterally rejected. Age does play some factor into player score. What we need now are the amounts that player score changes per year per position. This is a fairly simple process: using str_val$estimate[2] we are getting the values from the estimate column and selecting the 2nd row (which is the age estimate). We do this for each position.
+What each of these tables show is that the p-values are all below 0.05 so the null hypothesis is unilaterally rejected. Age does play some factor into player score. What we need now are the amounts that player score changes per year per position. This is a fairly simple process: using str_val$estimate[2] we are getting the values from the estimate column and selecting the 2nd row (which is the age estimate). We do this for each position and will apply these values soon.
 
 ```{r}
 str_ch <- str_val$estimate[2]

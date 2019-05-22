@@ -1,16 +1,17 @@
 ---
 title: "Final Project"
-author: "Dylan Krantz"
-date: "May 21, 2019"
-output: html_document
----
-
 knit: (function(input_file, encoding) {
   out_dir <- 'docs';
   rmarkdown::render(input_file,
  encoding=encoding,
  output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
  
+author: "Dylan Krantz"
+date: "May 21, 2019"
+output: html_document
+---
+
+
 #Final Project: Analysis and Creation of Optimal Football Teams using Football Manager 2017 Statistics
 
 ##Introduction
